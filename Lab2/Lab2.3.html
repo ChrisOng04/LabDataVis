@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="LAB 2.1" content=""/>
+    <meta name="Coding" content="HTML"/>
+    <meta name="Chris Ong" content="Chris Ong"/>
+    <title>LAB 2.3 D3 Drawing with Data - Scatter Plot</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(212, 171, 209);
+        }
+        /*Button Styling*/
+        .view-btn {
+          background-color: #ff01c4;
+          border: none;
+          color: white;
+          padding: 8px 16px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          cursor: pointer;
+          border-radius: 4px;
+      }
+      .view-btn:hover {
+          background-color: #6175e2;
+      }
+    </style>
+</head>
+
+<body>
+    <p><a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LAB/Main/Overall.html" class="view-btn">Back</a> <!--BACK KEY-->
+        <a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LAB/Lab2/Lab2.1.html" class="view-btn">LAB 2.1</a>
+        <a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LAB/Lab2/Lab2.2.html" class="view-btn">LAB 2.2</a>
+        <a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LAB/Lab2/Lab2.3.html" class="view-btn">LAB 2.3</a>
+        <a href="http://127.0.0.1:5500/Lab2/Lab2.4.html" class="view-btn">LAB 2.4</a>
+        </p>
+    <h1>LAB 2.3 The D3 Journey starts here...</h1>
+
+
+
+
+    <script>
+        var w= 600;
+        var h= 100;
+
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width",w)
+                    .attr("height",h);
+
+        var dataset = [
+            [5,20],
+            [480,90],
+            [250,50],
+            [100,33],
+            [330,95],
+            [410,12],
+            [475,44],
+            [25,67],
+            [85,21],
+            [220,88]
+            ];          
+
+        svg.selectAll("circle")
+           .data(dataset)
+           .enter()
+           .append("circle")
+           .attr("cx", function(d,i){
+            return d[0];
+           })
+           .attr("cy", function(d){
+            return d[1];
+           })
+           .attr("r",5)
+           .attr("fill","strategy");
+
+        svg.selectAll("text")
+        .data(dataset)
+        .enter()
+        .append("text")
+        .text(function(d){
+            return d[0] + "," +d[1];
+        })
+        .attr("x",function(d){
+            return d[0]+ 10;
+        })
+        .attr("y",function(d){
+            return d[1];
+        });
+            
+    </script>
+
+<footer style="color: #00ff0d; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
+    COS30045 Data Visualisation<br>Chris Ong
+  </footer>
+  
+</body>
+
+</html>
+
