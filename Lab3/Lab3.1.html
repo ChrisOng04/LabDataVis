@@ -35,13 +35,13 @@
 
 <body>
     <p><a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LAB/Main/Overall.html" class="view-btn">Back</a> <!--BACK KEY--></p>
-    <h1>Chris</h1>
+
     <h1>LAB 3.1 Drawing with Data - Scatter Plot</h1>
 
     <script>
         var w = 600;
         var h = 100;
-        var padding = 30; 
+        var padding = 30; // Increased padding for better spacing
 
         var svg = d3.select("body")
                     .append("svg")
@@ -61,7 +61,7 @@
             [220,88]
         ];          
 
- 
+        // Adjust xScale with increased padding
         var xScale = d3.scaleLinear()
                       .domain([d3.min(dataset, function(d) {
                           return d[0];
@@ -71,7 +71,7 @@
                       })])
                       .range([padding, w - padding]);
 
-
+        // Reverse the yScale range to flip the y-axis
         var yScale = d3.scaleLinear()
                       .domain([d3.min(dataset, function(d) {
                           return d[1];
