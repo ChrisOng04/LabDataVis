@@ -3,17 +3,24 @@
 
 <head>
     <meta charset="UTF-8"/>
+    <!-- Meta Information -->
     <meta name="LAB 3.1" content=""/>
     <meta name="Coding" content="HTML"/>
     <meta name="Chris Ong" content="Chris Ong"/>
+    
+    <!-- Page Title -->
     <title>LAB 3.1 D3 Drawing with Data - Scatter Plot</title>
+    
+    <!-- D3.js Library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <style>
+        /* Basic page styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: rgb(255, 245, 245); /*Test*/
+            background-color: rgb(255, 245, 245); /* Test background color */
         }
+
         /* Button Styling */
         .view-btn {
           background-color: #ff01c4;
@@ -27,6 +34,8 @@
           cursor: pointer;
           border-radius: 4px;
       }
+
+        /* Button hover effect */
       .view-btn:hover {
           background-color: #6175e2;
       }
@@ -34,24 +43,29 @@
 </head>
 
 <body>
+    <!-- Navigation Buttons -->
     <p><a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a> <!--BACK KEY-->
     <a href="/LabDataVis/Lab3/Lab3.1.html" class="view-btn">LAB 3.1</a>
     <a href="/LabDataVis/Lab3/Lab3.2.html" class="view-btn">LAB 3.2</a>
     <a href="/LabDataVis/Lab3/Lab3.2Mod.html" class="view-btn">LAB 3.2Mod</a>
-</p>
+    </p>
 
+    <!-- Page Heading -->
     <h1>LAB 3.1 Drawing with Data - Scatter Plot</h1>
 
     <script>
+        // Define SVG width and height
         var w = 600;
         var h = 100;
         var padding = 30; // Increased padding for better spacing
 
+        // Create an SVG element in the body
         var svg = d3.select("body")
                     .append("svg")
                     .attr("width", w)
                     .attr("height", h);
 
+        // Define dataset for the scatter plot
         var dataset = [
             [5,20],
             [500,90],
@@ -63,61 +77,65 @@
             [25,67],
             [85,21],
             [220,88]
-        ];          
+        ];
 
-        // Adjust xScale with increased padding
+        // X-scale to map data points to the width of the SVG
         var xScale = d3.scaleLinear()
                       .domain([d3.min(dataset, function(d) {
-                          return d[0];
+                          return d[0]; // Minimum X value
                       }),
                       d3.max(dataset, function(d) {
-                          return d[0];
+                          return d[0]; // Maximum X value
                       })])
-                      .range([padding, w - padding]);
+                      .range([padding, w - padding]); // Map to SVG width
 
-        // Reverse the yScale range to flip the y-axis
+        // Y-scale to map data points to the height of the SVG, reversing axis
         var yScale = d3.scaleLinear()
                       .domain([d3.min(dataset, function(d) {
-                          return d[1];
+                          return d[1]; // Minimum Y value
                       }),
                       d3.max(dataset, function(d) {
-                          return d[1];
+                          return d[1]; // Maximum Y value
                       })])
-                      .range([h - padding, padding]);
+                      .range([h - padding, padding]); // Map to SVG height
 
+        // Append circles for each data point
         svg.selectAll("circle")
            .data(dataset)
            .enter()
            .append("circle")
            .attr("cx", function(d) {
-                return xScale(d[0]);
+                return xScale(d[0]); // Position circle based on xScale
            })
            .attr("cy", function(d) {
-                return yScale(d[1]);
+                return yScale(d[1]); // Position circle based on yScale
            })
-           .attr("r", 5)
+           .attr("r", 5) // Circle radius
            .attr("fill", function(d) {
+                // Color circle red if data point matches [500,90], otherwise steelblue
                 return d[0] === 500 && d[1] === 90 ? "red" : "steelblue";
            });
 
+        // Append text labels for each data point
         svg.selectAll("text")
            .data(dataset)
            .enter()
            .append("text")
            .text(function(d) {
-                return d[0] + "," + d[1];
+                return d[0] + "," + d[1]; // Display the x and y values
            })
            .attr("x", function(d) {
-                return xScale(d[0]) - 5;
+                return xScale(d[0]) - 5; // Position text near the circle
            })
            .attr("y", function(d) {
-                return yScale(d[1]+5);
+                return yScale(d[1] + 5); // Adjust Y to avoid overlapping with the circle
            })
            .attr("font-family", "sans-serif")
            .attr("font-size", "11px")
-           .attr("fill", "green");
+           .attr("fill", "green"); // Green font color for text
     </script>
 
+    <!-- Footer Section -->
     <footer style="color: #00ff0d; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
         COS30045 Data Visualisation<br>Chris Ong
     </footer>
