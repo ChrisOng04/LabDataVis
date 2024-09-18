@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8"/>
+    <!-- Meta Information -->
     <meta name="LAB 3.2" content=""/>
     <meta name="Coding" content="HTML"/>
     <meta name="Chris Ong" content="Chris Ong"/>
+
+    <!-- Page Title -->
     <title>Scaled Scatter Plot with Axis</title>
+
+    <!-- D3.js Library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+
     <style>
+        /* Page styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: rgb(212, 171, 209);
+            background-color: rgb(212, 171, 209); /* Light background */
         }
- 
+
+        /* Button styling */
         .view-btn {
             background-color: #ff01c4;
             border: none;
@@ -25,29 +34,38 @@
             cursor: pointer;
             border-radius: 4px;
         }
+
+        /* Button hover effect */
         .view-btn:hover {
             background-color: #6175e2;
         }
     </style>
 </head>
+
 <body>
-    <p><a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a> <!--BACK KEY-->
-        <a href="/LabDataVis/Lab3/Lab3.1.html" class="view-btn">LAB 3.1</a><!--test-->
-        <a href="/LabDataVis/Lab3/Lab3.2.html" class="view-btn">LAB 3.2</a>
-        <a href="/LabDataVis/Lab3/Lab3.2Mod.html" class="view-btn">LAB 3.2Mod</a>
+    <!-- Navigation buttons -->
+    <p><a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a> <!-- Back to main page -->
+        <a href="/LabDataVis/Lab3/Lab3.1.html" class="view-btn">LAB 3.1</a><!-- LAB 3.1 link -->
+        <a href="/LabDataVis/Lab3/Lab3.2.html" class="view-btn">LAB 3.2</a><!-- LAB 3.2 link -->
+        <a href="/LabDataVis/Lab3/Lab3.2Mod.html" class="view-btn">LAB 3.2Mod</a> <!-- LAB 3.2Mod link -->
     </p>
-<h1>Scaled Scatter Plot with Axis</h1>
+
+    <!-- Heading -->
+    <h1>Scaled Scatter Plot with Axis</h1>
 
     <script>
+        // SVG dimensions and padding for layout
         var w = 600;
         var h = 300;
         var padding = 50;
 
+        // Create SVG element in the body
         var svg = d3.select("body")
                     .append("svg")
                     .attr("width", w)
                     .attr("height", h);
 
+        // Dataset to plot points
         var dataset = [
             [5, 20],
             [500, 90],
@@ -59,62 +77,65 @@
             [25, 67],
             [85, 21],
             [220, 88]
-        ];          
+        ];
 
-  
+        // X-scale: maps data values to SVG width, accounting for padding
         var xScale = d3.scaleLinear()
-                      .domain([0, d3.max(dataset, function(d) { return d[0]; })])
-                      .range([padding, w - padding]);
+                      .domain([0, d3.max(dataset, function(d) { return d[0]; })]) // Min: 0, Max: largest X value
+                      .range([padding, w - padding]); // Map to available width (between padding)
 
+        // Y-scale: maps data values to SVG height, with Y-axis flipped
         var yScale = d3.scaleLinear()
-                      .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-                      .range([h - padding, padding]); 
+                      .domain([0, d3.max(dataset, function(d) { return d[1]; })]) // Min: 0, Max: largest Y value
+                      .range([h - padding, padding]); // Map to available height (flipped Y-axis)
 
-
+        // Define X-axis using the scale with 5 ticks
         var xAxis = d3.axisBottom()
                       .ticks(5)
                       .scale(xScale);
 
-                      
+        // Define Y-axis using the scale with 5 ticks
         var yAxis = d3.axisLeft()
                       .ticks(5)
                       .scale(yScale);
 
-
+        // Plot the circles for each data point
         svg.selectAll("circle")
            .data(dataset)
            .enter()
            .append("circle")
-           .attr("cx", function(d) { return xScale(d[0]); })
-           .attr("cy", function(d) { return yScale(d[1]); })
-           .attr("r", 5)
+           .attr("cx", function(d) { return xScale(d[0]); }) // Set X position based on scaled value
+           .attr("cy", function(d) { return yScale(d[1]); }) // Set Y position based on scaled value
+           .attr("r", 5) // Radius of each circle
            .attr("fill", function(d) {
+               // Color red if the point is [500,90], otherwise steelblue
                return d[0] === 500 && d[1] === 90 ? "red" : "steelblue";
            });
 
-  
+        // Append text labels near each data point
         svg.selectAll("text")
            .data(dataset)
            .enter()
            .append("text")
-           .text(function(d) { return d[0] + "," + d[1]; })
-           .attr("x", function(d) { return xScale(d[0]) + 5; })
-           .attr("y", function(d) { return yScale(d[1]) - 5; })
+           .text(function(d) { return d[0] + "," + d[1]; }) // Display x,y coordinates
+           .attr("x", function(d) { return xScale(d[0]) + 5; }) // Position to the right of the circle
+           .attr("y", function(d) { return yScale(d[1]) - 5; }) // Position slightly above the circle
            .attr("font-family", "sans-serif")
            .attr("font-size", "11px")
-           .attr("fill", "green");
+           .attr("fill", "green"); // Green text color
 
- 
+        // Add X-axis to the SVG, positioned at the bottom
         svg.append("g")
-           .attr("transform", "translate(0," + (h - padding) + ")")
+           .attr("transform", "translate(0," + (h - padding) + ")") // Position the X-axis at the bottom
            .call(xAxis);
 
-  
+        // Add Y-axis to the SVG, positioned on the left
         svg.append("g")
-           .attr("transform", "translate(" + padding + ",0)")
+           .attr("transform", "translate(" + padding + ",0)") // Position the Y-axis on the left
            .call(yAxis);
     </script>
 
+    <!-- Footer Section -->
     <footer style="color: #00ff0d; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
         COS30045 Data Visualisation<br>Chris Ong
     </footer>
