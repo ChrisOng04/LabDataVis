@@ -5,12 +5,12 @@
     <meta name="LAB 3.2" content=""/>
     <meta name="Coding" content="HTML"/>
     <meta name="Chris Ong" content="Chris Ong"/>
-    <title>Scaled Scatter Plot with Axis</title>
+    <title>Modified Scatter Plot with Axis Labels</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: rgb(212, 171, 209);
+            background-color: rgb(255, 255, 255);
         }
  
         .view-btn {
@@ -26,7 +26,7 @@
             border-radius: 4px;
         }
         .view-btn:hover {
-            background-color: #6175e2;
+            background-color: #f828f1;
         }
     </style>
 </head>
@@ -35,63 +35,66 @@
     <a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LabDataVis/LabDataVis/Lab3/Lab3.1.html" class="view-btn">LAB 3.1</a>
     <a href="file:///C:/Users/GIGABYTE/Desktop/Degree/Sem%201/Data%20Visualisation/LabDataVis/LabDataVis/Lab3/Lab3.2.html" class="view-btn">LAB 3.2</a>
 </p>
-<h1>Scaled Scatter Plot with Axis</h1>
+<h1>Modified Scatter Plot with Axis Labels</h1>
+
+    <p>The following is a modified version of the original Lab 3.2 with axis labels.</p>
 
     <script>
         var w = 600;
         var h = 300;
         var padding = 50;
 
+       
         var svg = d3.select("body")
                     .append("svg")
                     .attr("width", w)
                     .attr("height", h);
 
+        
         var dataset = [
-            [5, 20],
-            [500, 90],
-            [250, 50],
-            [100, 33],
-            [330, 95],
-            [410, 12],
-            [475, 44],
-            [25, 67],
-            [85, 21],
-            [220, 88]
-        ];          
+            [2, 8],
+            [3, 5],
+            [5, 17],
+            [6, 6],
+            [6, 12],
+            [7, 20],
+            [8, 22],
+            [10, 11],
+            [5, 12],
+            [6, 16]
+        ];
 
-  
+        // X-scale based on tree age (year)
         var xScale = d3.scaleLinear()
                       .domain([0, d3.max(dataset, function(d) { return d[0]; })])
                       .range([padding, w - padding]);
 
+        // Y-scale based on tree height (m)
         var yScale = d3.scaleLinear()
                       .domain([0, d3.max(dataset, function(d) { return d[1]; })])
                       .range([h - padding, padding]); 
 
-
+        // X-axis definition with ticks
         var xAxis = d3.axisBottom()
                       .ticks(5)
                       .scale(xScale);
 
-                      
+        // Y-axis definition with ticks
         var yAxis = d3.axisLeft()
                       .ticks(5)
                       .scale(yScale);
 
-
+        // Plot circles for each data point in the dataset
         svg.selectAll("circle")
            .data(dataset)
            .enter()
            .append("circle")
-           .attr("cx", function(d) { return xScale(d[0]); })
-           .attr("cy", function(d) { return yScale(d[1]); })
+           .attr("cx", function(d) { return xScale(d[0]); })  // Set X position based on X scale
+           .attr("cy", function(d) { return yScale(d[1]); })  // Set Y position based on Y scale
            .attr("r", 5)
-           .attr("fill", function(d) {
-               return d[0] === 500 && d[1] === 90 ? "red" : "steelblue";
-           });
+           .attr("fill", "pink");  // Color the circles
 
-  
+        // Display the data values as text next to each circle
         svg.selectAll("text")
            .data(dataset)
            .enter()
@@ -103,18 +106,33 @@
            .attr("font-size", "11px")
            .attr("fill", "green");
 
- 
+        // Append X-axis to the SVG
         svg.append("g")
            .attr("transform", "translate(0," + (h - padding) + ")")
            .call(xAxis);
 
-  
+        // Append Y-axis to the SVG
         svg.append("g")
            .attr("transform", "translate(" + padding + ",0)")
            .call(yAxis);
+
+        // X-axis label
+        svg.append("text")
+           .attr("transform", "translate(" + (w / 2) + " ," + (h - 10) + ")") // Position at the bottom center
+           .style("text-anchor", "middle")
+           .text("Tree Age (year)");
+
+        // Y-axis label
+        svg.append("text")
+           .attr("transform", "rotate(-90)")  // Rotate for Y-axis label
+           .attr("y", +5 )
+           .attr("x", -(h / 2))
+           .attr("dy", "1em")
+           .style("text-anchor", "middle")
+           .text("Tree Height (m)");
     </script>
 
-    <footer style="color: #00ff0d; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
+    <footer style="color: #59c3f4; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
         COS30045 Data Visualisation<br>Chris Ong
     </footer>
 </body>
