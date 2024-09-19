@@ -3,17 +3,17 @@
 
 <head>
     <meta charset="UTF-8"/>
-    <meta name="LAB 2.1" content=""/>
+    <meta name="LAB 5.1" content=""/>
     <meta name="Coding" content="HTML"/>
     <meta name="Chris Ong" content="Chris Ong"/>
-    <title>LAB 2.2 D3 Drawing with Data - BAR CHART</title>
+    <title>LAB 5.2 D3 Update</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: rgb(212, 171, 209);
         }
-        /*Button Styling*/
+        /* Button Styling */
         .view-btn {
           background-color: #ff01c4;
           border: none;
@@ -29,69 +29,100 @@
       .view-btn:hover {
           background-color: #6175e2;
       }
+      .update-btn {
+          margin-top: 20px;
+      }
     </style>
 </head>
 
 <body>
-    <p><a href="" class="view-btn">Back</a> <!--BACK KEY-->
+    <p>
+        <a href="" class="view-btn">Back</a>
         <a href="" class="view-btn">LAB 5.1</a>
-        <a href="" class="view-btn">LAB 5.2</a>
+    </p>
+    <h1>LAB 5.1 The D3 Update</h1>
+    
+    <div id="chart-container"></div>
 
-        </p>
-    <h1>LAB 2.2 The D3 Journey starts here...</h1>
+    <!-- Button to trigger data update -->
+    <button class="view-btn update-btn" onclick="updateData()">Update Data</button>
 
     <script>
-        var w= 500;
-        var h=200;
-        var barPadding =3;
+        var w = 500;
+        var h = 200;
+        var barPadding = 0.1; // Will use paddingInner for better spacing
 
-        var dataset = [14,5,26,23,9]; 
+        // Initial dataset
+        var dataset = [14, 5, 26, 23, 9]; 
 
-        var svg = d3.select("body")
-                    .append("svg")
-                    .attr("width", w)
-                    .attr("height", h)
-                    .attr("fill","rgb(50,205,50)");//change rgb for lime green color bar
-        
+        // Scales
+        var xScale = d3.scaleBand()
+            .domain(d3.range(dataset.length))
+            .rangeRound([0, w])
+            .paddingInner(barPadding);  // Using paddingInner for spacing
+
+        var yScale = d3.scaleLinear()
+            .domain([0, d3.max(dataset)])
+            .range([h, 0]);
+
+        // Create the SVG
+        var svg = d3.select("#chart-container")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        // Create bars
         svg.selectAll("rect")
-                    .data(dataset)
-                    .enter()
-                    .append("rect")
-                    .attr("x", function(d, i){
-                        return i *(w /dataset.length);
-                    })
-                    .attr("y", function(d){
-                        return h - (d*4)-15;   //(added -30) for Lab Task
-                    })
-                    .attr("width", function(d){
-                        return (w/dataset.length-barPadding);
-                    })
-                    .attr("height", function(d){
-                        return d*4;
-                    });
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) { return xScale(i); })
+            .attr("y", function(d) { return yScale(d); })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function(d) { return h - yScale(d); })
+            .attr("fill", "limegreen");
 
+        // Add labels
         svg.selectAll("text")
             .data(dataset)
             .enter()
             .append("text")
-            .text(function(d){
-                return d;
-            })
-            .attr("fill","black")
-            .attr("x",function(d,i){
-                return i * (w / dataset.length) + 16;
-            })
-            .attr("y",function(d){
-                return h - (d * 4); 
-            });
-            
+            .text(function(d) { return d; })
+            .attr("x", function(d, i) { return xScale(i) + xScale.bandwidth() / 2; })
+            .attr("y", function(d) { return yScale(d) + 15; })
+            .attr("fill", "black")
+            .attr("text-anchor", "middle");
+
+        // Function to update the data
+        function updateData() {
+            // Generate a new random dataset
+            dataset = d3.range(5).map(function() { return Math.floor(Math.random() * 25); });
+
+            // Update the scales
+            yScale.domain([0, d3.max(dataset)]);
+
+            // Update bars
+            svg.selectAll("rect")
+                .data(dataset)
+                .transition()
+                .duration(500)
+                .attr("y", function(d) { return yScale(d); })
+                .attr("height", function(d) { return h - yScale(d); });
+
+            // Update labels
+            svg.selectAll("text")
+                .data(dataset)
+                .transition()
+                .duration(500)
+                .text(function(d) { return d; })
+                .attr("y", function(d) { return yScale(d) + 15; });
+        }
     </script>
 
-<footer style="color: #090909; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
-    COS30045 Data Visualisation<br>Chris Ong
-  </footer>
-  
+    <footer style="color: #090909; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
+        COS30045 Data Visualisation<br>Chris Ong
+    </footer>
+
 </body>
 
 </html>
-

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="LAB 5.2" content=""/>
+    <meta name="Coding" content="HTML"/>
+    <meta name="Chris Ong" content="Chris Ong"/>
+    <title>LAB 5.2 D3 Update with Transitions</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(212, 171, 209);
+        }
+        /* Button Styling */
+        .view-btn, .update-btn {
+          background-color: #ff01c4;
+          border: none;
+          color: white;
+          padding: 8px 16px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          cursor: pointer;
+          border-radius: 4px;
+      }
+      .view-btn:hover, .update-btn:hover {
+          background-color: #6175e2;
+      }
+    </style>
+</head>
+
+<body>
+    <p>
+        <a href="" class="view-btn">Back</a> <!--BACK KEY-->
+        <a href="" class="view-btn">LAB 5.1</a>
+        <a href="" class="view-btn">LAB 5.2</a>
+    </p>
+
+    <h1>LAB 5.2 The D3 Update with Transitions</h1>
+
+    <script>
+        var w = 500;
+        var h = 200;
+        var barPadding = 3;
+
+        var dataset = [14, 5, 26, 23, 9]; 
+
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+        // Initial Bar Chart
+        var rects = svg.selectAll("rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                    .attr("x", function(d, i){
+                        return i * (w / dataset.length);
+                    })
+                    .attr("y", function(d){
+                        return h - (d * 4);
+                    })
+                    .attr("width", w / dataset.length - barPadding)
+                    .attr("height", function(d){
+                        return d * 4;
+                    })
+                    .attr("fill", "rgb(50, 205, 50)");
+
+        var labels = svg.selectAll("text")
+                        .data(dataset)
+                        .enter()
+                        .append("text")
+                        .text(function(d){
+                            return d;
+                        })
+                        .attr("x", function(d, i){
+                            return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
+                        })
+                        .attr("y", function(d){
+                            return h - (d * 4) + 15;
+                        })
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "black");
+
+        // Update Data function
+        function updateData() {
+            dataset = [];
+            var numBars = Math.floor(Math.random() * 10) + 3; // Random number of bars
+            for (var i = 0; i < numBars; i++) {
+                var newNumber = Math.floor(Math.random() * 25); // Random data between 0 and 25
+                dataset.push(newNumber);
+            }
+
+            // Rebind the data for rectangles
+            rects = svg.selectAll("rect")
+                .data(dataset);
+
+            rects.enter()
+                .append("rect")
+                .merge(rects)
+                .transition()
+                .duration(1000)
+                .attr("x", function(d, i) {
+                    return i * (w / dataset.length);
+                })
+                .attr("y", function(d) {
+                    return h - (d * 4);
+                })
+                .attr("width", w / dataset.length - barPadding)
+                .attr("height", function(d) {
+                    return d * 4;
+                });
+
+            rects.exit().remove();
+
+            // Rebind the data for labels
+            labels = svg.selectAll("text")
+                .data(dataset);
+
+            labels.enter()
+                .append("text")
+                .merge(labels)
+                .transition()
+                .duration(1000)
+                .text(function(d) {
+                    return d;
+                })
+                .attr("x", function(d, i) {
+                    return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
+                })
+                .attr("y", function(d) {
+                    return h - (d * 4) + 15;
+                })
+                .attr("text-anchor", "middle");
+
+            labels.exit().remove();
+        }
+
+        // Easing Type 1: Elastic Out
+        function transitionType1() {
+            rects.data(dataset)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeElasticOut)
+                .attr("y", function(d){
+                    return h - (d * 4);
+                })
+                .attr("height", function(d){
+                    return d * 4;
+                });
+
+            labels.data(dataset)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeElasticOut)
+                .attr("x", function(d, i){
+                    return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
+                })
+                .attr("y", function(d){
+                    return h - (d * 4) + 15;
+                });
+        }
+
+        // Easing Type 2: Circle Out
+        function transitionType2() {
+            rects.data(dataset)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeCircleOut)
+                .attr("y", function(d){
+                    return h - (d * 4);
+                })
+                .attr("height", function(d){
+                    return d * 4;
+                });
+
+            labels.data(dataset)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeCircleOut)
+                .attr("x", function(d, i){
+                    return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
+                })
+                .attr("y", function(d){
+                    return h - (d * 4) + 15;
+                });
+        }
+    </script>
+    
+    <p>
+        <button class="update-btn" onclick="updateData()">Update Data</button> 
+        <button class="update-btn" onclick="transitionType1()">Transition 1</button>
+        <button class="update-btn" onclick="transitionType2()">Transition 2</button> 
+    </p> 
+
+    <footer style="color: #090909; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
+        COS30045 Data Visualisation<br>Chris Ong
+    </footer>
+
+</body>
+
+</html>
