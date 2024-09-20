@@ -2,205 +2,186 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="LAB 5.2" content=""/>
-    <meta name="Coding" content="HTML"/>
-    <meta name="Chris Ong" content="Chris Ong"/>
-    <title>LAB 5.2 D3 Update with Transitions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Chris Ong">
+    <title>Lab 5.2: D3 Transitions</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: rgb(212, 171, 209);
         }
+
         /* Button Styling */
-        .view-btn, .update-btn {
-          background-color: #ff01c4;
-          border: none;
-          color: white;
-          padding: 8px 16px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 14px;
-          cursor: pointer;
-          border-radius: 4px;
-      }
-      .view-btn:hover, .update-btn:hover {
-          background-color: #6175e2;
-      }
+        .view-btn,
+        .update-btn {
+            background-color: #ff01c4;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px;
+        }
+
+        .view-btn:hover,
+        .update-btn:hover {
+            background-color: #6175e2;
+        }
+
+        h1 {
+            color: #4a148c;
+        }
+
+        footer {
+            color: #090909;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 0.9em;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
+    <h1>Lab 5.2: D3 Transitions</h1>
+
     <p>
-        <a href="" class="view-btn">Back</a> <!--BACK KEY-->
-        <a href="" class="view-btn">LAB 5.1</a>
-        <a href="" class="view-btn">LAB 5.2</a>
+        <a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a>
+        <a href="/Lab5/Lab5.1.html" class="view-btn">LAB 5.1</a>
+        <a href="/Lab5/Lab5.2.html" class="view-btn">LAB 5.2</a>
+        <a href="/Lab5/Lab5.3.html" class="view-btn">LAB 5.3</a>
     </p>
 
-    <h1>LAB 5.2 The D3 Update with Transitions</h1>
+    <p>
+        <button class="update-btn" onclick="updateData()">Update Data</button>
+        <button class="update-btn" onclick="transitionType1()">Transition 1: Elastic Out</button>
+        <button class="update-btn" onclick="transitionType2()">Transition 2: Circle Out</button>
+    </p>
 
     <script>
+        // SVG and Dataset Configuration
         var w = 500;
         var h = 200;
         var barPadding = 3;
 
-        var dataset = [14, 5, 26, 23, 9]; 
+        var dataset = [14, 5, 26, 23, 9];
 
         var svg = d3.select("body")
-                    .append("svg")
-                    .attr("width", w)
-                    .attr("height", h);
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        // Scales for height
+        var yScale = d3.scaleLinear()
+            .domain([0, d3.max(dataset)])
+            .range([0, h]);
 
         // Initial Bar Chart
-        var rects = svg.selectAll("rect")
-                    .data(dataset)
-                    .enter()
-                    .append("rect")
-                    .attr("x", function(d, i){
-                        return i * (w / dataset.length);
-                    })
-                    .attr("y", function(d){
-                        return h - (d * 4);
-                    })
-                    .attr("width", w / dataset.length - barPadding)
-                    .attr("height", function(d){
-                        return d * 4;
-                    })
-                    .attr("fill", "rgb(50, 205, 50)");
-
-        var labels = svg.selectAll("text")
-                        .data(dataset)
-                        .enter()
-                        .append("text")
-                        .text(function(d){
-                            return d;
-                        })
-                        .attr("x", function(d, i){
-                            return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
-                        })
-                        .attr("y", function(d){
-                            return h - (d * 4) + 15;
-                        })
-                        .attr("text-anchor", "middle")
-                        .attr("fill", "black");
-
-        // Update Data function
-        function updateData() {
-            dataset = [];
-            var numBars = Math.floor(Math.random() * 10) + 3; // Random number of bars
-            for (var i = 0; i < numBars; i++) {
-                var newNumber = Math.floor(Math.random() * 25); // Random data between 0 and 25
-                dataset.push(newNumber);
-            }
-
-            // Rebind the data for rectangles
-            rects = svg.selectAll("rect")
+        function drawBars(transitionType = null) {
+            var rects = svg.selectAll("rect")
                 .data(dataset);
 
+            // Update existing bars
             rects.enter()
                 .append("rect")
                 .merge(rects)
-                .transition()
-                .duration(1000)
-                .attr("x", function(d, i) {
+                .attr("x", function (d, i) {
                     return i * (w / dataset.length);
                 })
-                .attr("y", function(d) {
-                    return h - (d * 4);
-                })
                 .attr("width", w / dataset.length - barPadding)
-                .attr("height", function(d) {
-                    return d * 4;
-                });
+                .attr("fill", "rgb(50, 205, 50)");
+
+            if (transitionType) {
+                rects.transition()
+                    .duration(2000)
+                    .ease(transitionType)
+                    .attr("y", function (d) {
+                        return h - yScale(d);
+                    })
+                    .attr("height", function (d) {
+                        return yScale(d);
+                    });
+            } else {
+                rects.attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                    .attr("height", function (d) {
+                        return yScale(d);
+                    });
+            }
 
             rects.exit().remove();
 
-            // Rebind the data for labels
-            labels = svg.selectAll("text")
+            // Labels
+            var labels = svg.selectAll("text")
                 .data(dataset);
 
             labels.enter()
                 .append("text")
                 .merge(labels)
-                .transition()
-                .duration(1000)
-                .text(function(d) {
+                .text(function (d) {
                     return d;
                 })
-                .attr("x", function(d, i) {
+                .attr("x", function (d, i) {
                     return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
                 })
-                .attr("y", function(d) {
-                    return h - (d * 4) + 15;
-                })
                 .attr("text-anchor", "middle");
+
+            if (transitionType) {
+                labels.transition()
+                    .duration(2000)
+                    .ease(transitionType)
+                    .attr("y", function (d) {
+                        return h - yScale(d) + 15;
+                    });
+            } else {
+                labels.attr("y", function (d) {
+                    return h - yScale(d) + 15;
+                });
+            }
 
             labels.exit().remove();
         }
 
+        // Function to update data and redraw chart
+        function updateData() {
+            dataset = [];
+            var numBars = Math.floor(Math.random() * 10) + 3; // Random number of bars
+            for (var i = 0; i < numBars; i++) {
+                var newNumber = Math.floor(Math.random() * 25) + 1; // Random data between 1 and 25 (no 0s)
+                dataset.push(newNumber);
+            }
+
+            // Rescale after updating data
+            yScale.domain([0, d3.max(dataset)]);
+
+            drawBars(); // Redraw the chart with new data
+        }
+
         // Easing Type 1: Elastic Out
         function transitionType1() {
-            rects.data(dataset)
-                .transition()
-                .duration(2000)
-                .ease(d3.easeElasticOut)
-                .attr("y", function(d){
-                    return h - (d * 4);
-                })
-                .attr("height", function(d){
-                    return d * 4;
-                });
-
-            labels.data(dataset)
-                .transition()
-                .duration(2000)
-                .ease(d3.easeElasticOut)
-                .attr("x", function(d, i){
-                    return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
-                })
-                .attr("y", function(d){
-                    return h - (d * 4) + 15;
-                });
+            drawBars(d3.easeElasticOut);
         }
 
         // Easing Type 2: Circle Out
         function transitionType2() {
-            rects.data(dataset)
-                .transition()
-                .duration(2000)
-                .ease(d3.easeCircleOut)
-                .attr("y", function(d){
-                    return h - (d * 4);
-                })
-                .attr("height", function(d){
-                    return d * 4;
-                });
-
-            labels.data(dataset)
-                .transition()
-                .duration(2000)
-                .ease(d3.easeCircleOut)
-                .attr("x", function(d, i){
-                    return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;
-                })
-                .attr("y", function(d){
-                    return h - (d * 4) + 15;
-                });
+            drawBars(d3.easeCircleOut);
         }
-    </script>
-    
-    <p>
-        <button class="update-btn" onclick="updateData()">Update Data</button> 
-        <button class="update-btn" onclick="transitionType1()">Transition 1</button>
-        <button class="update-btn" onclick="transitionType2()">Transition 2</button> 
-    </p> 
 
-    <footer style="color: #090909; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
+        // Initial draw
+        drawBars();
+    </script>
+
+    <footer>
         COS30045 Data Visualisation<br>Chris Ong
     </footer>
-
 </body>
 
 </html>
