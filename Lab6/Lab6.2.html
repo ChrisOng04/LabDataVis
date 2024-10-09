@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="LAB 6.2" content="" />
+    <meta name="Coding" content="HTML" />
+    <meta name="Chris Ong" content="Chris Ong" />
+    <title>LAB 6.2 D3 Interactivity - Sort</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(212, 171, 209);
+        }
+
+        /* Button Styling */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .update-btn {
+            background-color: #ff01c4;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px;
+        }
+
+        .update-btn:hover {
+            background-color: #6175e2;
+        }
+
+        .tooltip {
+            font-size: 12px;
+            fill: black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>LAB 6.2 D3 Interactivity - Sort</h1>
+
+    <svg id="bar-chart" width="500" height="200"></svg> <!-- Changed to an ID for easier selection -->
+    <br /> 
+
+    <div class="button-container"> <!-- Wrapper for buttons -->
+        <button class="update-btn" id="add">Add Data</button>
+        <button class="update-btn" id="remove">Remove Data</button>
+        <button class="update-btn" id="sort">Sort</button>
+    </div>
+
+    <script>
+        var w = 500;
+        var h = 200;
+        var barPadding = 3;
+
+        var dataset = [14, 5, 26, 23, 9];
+        var isAscending = true; // Flag to track sort order
+
+        var svg = d3.select("#bar-chart"); // Select by ID
+
+        var xScale = d3.scaleBand()
+            .domain(d3.range(dataset.length))
+            .rangeRound([0, w])
+            .paddingInner(0.05);
+
+        var yScale = d3.scaleLinear()
+            .domain([0, d3.max(dataset)])
+            .range([0, h]);
+
+        // Initial Bar Chart
+        var rects = svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", function (d, i) {
+                return xScale(i);
+            })
+            .attr("y", function (d) {
+                return h - yScale(d);
+            })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function (d) {
+                return yScale(d);
+            })
+            .attr("fill", "rgb(50, 205, 50)")
+            .on("mouseover", function (event, d) {
+                d3.select(this)
+                    .attr("fill", "orange");
+
+                // Show value inside the bar
+                var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() / 2;
+                var yPosition = parseFloat(d3.select(this).attr("y")) + 15; // Position inside the bar
+
+                svg.append("text")
+                    .attr("id", "tooltip")
+                    .attr("x", xPosition)
+                    .attr("y", yPosition)
+                    .attr("text-anchor", "middle")
+                    .attr("class", "tooltip")
+                    .text(d);
+            })
+            .on("mouseout", function () {
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .attr("fill", "rgb(50, 205, 50)");
+
+                d3.select("#tooltip").remove(); // Remove tooltip on mouseout
+            });
+
+        // Add Data function
+        function addData() {
+            var newNumber = Math.floor(Math.random() * 25); // Random data between 0 and 25
+            dataset.push(newNumber);
+
+            // Update Scales
+            xScale.domain(d3.range(dataset.length));
+            yScale.domain([0, d3.max(dataset)]);
+
+            // Select all rectangles and bind the new data
+            rects = svg.selectAll("rect")
+                .data(dataset);
+
+            // Enter new elements
+            rects.enter()
+                .append("rect")
+                .attr("x", w) // Start off-screen to the right
+                .attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                .attr("width", xScale.bandwidth())
+                .attr("height", function (d) {
+                    return yScale(d);
+                })
+                .attr("fill", "rgb(50, 205, 50)")
+                .merge(rects)
+                .on("mouseover", function (event, d) {
+                    d3.select(this)
+                        .attr("fill", "orange");
+
+                    // Show value inside the bar
+                    var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() / 2;
+                    var yPosition = parseFloat(d3.select(this).attr("y")) + 15; // Position inside the bar
+
+                    svg.append("text")
+                        .attr("id", "tooltip")
+                        .attr("x", xPosition)
+                        .attr("y", yPosition)
+                        .attr("text-anchor", "middle")
+                        .attr("class", "tooltip")
+                        .text(d);
+                })
+                .on("mouseout", function () {
+                    d3.select(this)
+                        .transition()
+                        .duration(500)
+                        .attr("fill", "rgb(50, 205, 50)");
+
+                    d3.select("#tooltip").remove(); // Remove tooltip on mouseout
+                })
+                .transition()
+                .duration(1000)
+                .attr("x", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                .attr("width", xScale.bandwidth())
+                .attr("height", function (d) {
+                    return yScale(d);
+                });
+        }
+
+        // Remove Data function
+        function removeData() {
+            dataset.shift(); // Remove the first data element
+
+            // Update Scales
+            xScale.domain(d3.range(dataset.length));
+            yScale.domain([0, d3.max(dataset)]);
+
+            // Select all rectangles and bind the new data
+            rects = svg.selectAll("rect")
+                .data(dataset);
+
+            // Exit and remove old elements
+            rects.exit()
+                .transition()
+                .duration(1000)
+                .attr("x", w)
+                .remove();
+
+            // Update the existing bars
+            rects.transition()
+                .duration(1000)
+                .attr("x", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                .attr("height", function (d) {
+                    return yScale(d);
+                });
+        }
+
+        // Sort button functionality
+        function sortBars() {
+            // Sort dataset
+            dataset.sort(function (a, b) {
+                return isAscending ? d3.ascending(a, b) : d3.descending(a, b);
+            });
+
+            // Toggle the sort order
+            isAscending = !isAscending;
+
+            // Update the xScale domain based on the sorted data
+            xScale.domain(d3.range(dataset.length));
+
+            // Bind the updated dataset and redraw the rectangles
+            rects = svg.selectAll("rect")
+                .data(dataset);
+
+            // Enter new elements if the dataset has increased
+            rects.enter()
+                .append("rect")
+                .attr("x", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                .attr("width", xScale.bandwidth())
+                .attr("height", function (d) {
+                    return yScale(d);
+                })
+                .attr("fill", "rgb(50, 205, 50)")
+                .merge(rects) // Merge enter and update selections
+                .transition() // Add transition for the sort effect
+                .duration(1000)
+                .attr("x", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                .attr("height", function (d) {
+                    return yScale(d);
+                });
+
+            // Exit old elements if the dataset has decreased
+            rects.exit()
+                .transition()
+                .duration(1000)
+                .attr("x", w) // Move out of view
+                .remove();
+        }
+
+        // Add event listeners for buttons
+        d3.select("#add").on("click", addData);
+        d3.select("#remove").on("click", removeData);
+        d3.select("#sort").on("click", sortBars);
+    </script>
+</body>
+
+</html>
