@@ -1,12 +1,12 @@
 /* CSS Styling for the line and area */
 .line {
     fill: none;
-    stroke: steelblue;
+    stroke: rgb(53, 144, 218);
     stroke-width: 2px;
 }
 
 .area {
-    fill: steelblue;
+    fill: rgb(44, 241, 241);
     opacity: 0.5;
 }
 
@@ -22,7 +22,7 @@
 
 .body {
     font-family: Arial, sans-serif;
-    background-color: rgb(212, 171, 209);
+    background-color: rgb(181, 223, 55);
 }
 /*Button Styling*/
 .view-btn {
