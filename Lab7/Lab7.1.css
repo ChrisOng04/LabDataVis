@@ -1,0 +1,42 @@
+/* CSS Styling for the line and area */
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.area {
+    fill: steelblue;
+    opacity: 0.5;
+}
+
+.annotation-line {
+    stroke: red;
+    stroke-dasharray: 5,5;
+    stroke-width: 1px;
+}
+
+.axis-label {
+    font-size: 12px;
+}
+
+.body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(212, 171, 209);
+}
+/*Button Styling*/
+.view-btn {
+  background-color: #ff01c4;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.view-btn:hover {
+  background-color: #6175e2;
+}
