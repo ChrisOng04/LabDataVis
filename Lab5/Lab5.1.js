@@ -1,3 +1,5 @@
+// JavaScript for Lab 5.1 D3 Visualization
+
 var w = 500;
 var h = 200;
 var barPadding = 0.1; // Will use paddingInner for better spacing

@@ -15,30 +15,41 @@
         }
         /* Button Styling */
         .view-btn {
-          background-color: #ff01c4;
-          border: none;
-          color: white;
-          padding: 8px 16px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 14px;
-          cursor: pointer;
-          border-radius: 4px;
-      }
-      .view-btn:hover {
-          background-color: #6175e2;
-      }
-      .update-btn {
-          margin-top: 20px;
-      }
+            background-color: #ff01c4;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .view-btn:hover {
+            background-color: #6175e2;
+        }
+        .update-btn {
+            margin-top: 20px;
+        }
+        /* Chart Styling */
+        svg {
+            margin-top: 20px;
+        }
+        rect {
+            transition: all 0.5s ease;
+        }
+        text {
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
     <p>
         <a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a>
-        <a href="/Lab5/Lab5.1.html" class="view-btn">LAB 5.1</a><!--test-->
+        <a href="/Lab5/Lab5.1.html" class="view-btn">LAB 5.1</a>
         <a href="/Lab5/Lab5.2.html" class="view-btn">LAB 5.2</a>
         <a href="/Lab5/Lab5.3.html" class="view-btn">LAB 5.3</a>
     </p>
@@ -49,82 +60,11 @@
     <!-- Button to trigger data update -->
     <button class="view-btn update-btn" onclick="updateData()">Update Data</button>
 
-    <script>
-        var w = 500;
-        var h = 200;
-        var barPadding = 0.1; // Will use paddingInner for better spacing
-
-        // Initial dataset
-        var dataset = [14, 5, 26, 23, 9]; 
-
-        // Scales
-        var xScale = d3.scaleBand()
-            .domain(d3.range(dataset.length))
-            .rangeRound([0, w])
-            .paddingInner(barPadding);  // Using paddingInner for spacing
-
-        var yScale = d3.scaleLinear()
-            .domain([0, d3.max(dataset)])
-            .range([h, 0]);
-
-        // Create the SVG
-        var svg = d3.select("#chart-container")
-            .append("svg")
-            .attr("width", w)
-            .attr("height", h);
-
-        // Create bars
-        svg.selectAll("rect")
-            .data(dataset)
-            .enter()
-            .append("rect")
-            .attr("x", function(d, i) { return xScale(i); })
-            .attr("y", function(d) { return yScale(d); })
-            .attr("width", xScale.bandwidth())
-            .attr("height", function(d) { return h - yScale(d); })
-            .attr("fill", "limegreen");
-
-        // Add labels
-        svg.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(function(d) { return d; })
-            .attr("x", function(d, i) { return xScale(i) + xScale.bandwidth() / 2; })
-            .attr("y", function(d) { return yScale(d) + 15; })
-            .attr("fill", "black")
-            .attr("text-anchor", "middle");
-
-        // Function to update the data
-        function updateData() {
-            // Generate a new random dataset
-            dataset = d3.range(5).map(function() { return Math.floor(Math.random() * 25); });
-
-            // Update the scales
-            yScale.domain([0, d3.max(dataset)]);
-
-            // Update bars
-            svg.selectAll("rect")
-                .data(dataset)
-                .transition()
-                .duration(500)
-                .attr("y", function(d) { return yScale(d); })
-                .attr("height", function(d) { return h - yScale(d); });
-
-            // Update labels
-            svg.selectAll("text")
-                .data(dataset)
-                .transition()
-                .duration(500)
-                .text(function(d) { return d; })
-                .attr("y", function(d) { return yScale(d) + 15; });
-        }
-    </script>
-
     <footer style="color: #090909; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
         COS30045 Data Visualisation<br>Chris Ong
     </footer>
 
+    <script src="Lab5.1.js"></script>
 </body>
 
 </html>
