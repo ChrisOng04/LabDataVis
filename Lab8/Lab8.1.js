@@ -17,12 +17,12 @@ var svg = d3.select("#map-container")
     .attr("width", width)
     .attr("height", height);
 
-// Load the GeoJSON data.
-d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main/Lab8/LGA_VIC.json").then(function (geojson) {// check 
-    console.log("GeoJSON data loaded successfully:", geojson); // Log the GeoJSON data to ensure it loads properly
+// Load the GeoJSON data
+d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main/Lab8/LGA_VIC.json").then(function (geojson) {
+    console.log("GeoJSON data loaded successfully:", geojson);
     // Bind data and create one path per GeoJSON feature
     svg.selectAll("path")
-        .data(geojson.features) // Corrected the reference to 'geojson'
+        .data(geojson.features)
         .enter()
         .append("path")
         .attr("d", path)
@@ -30,5 +30,5 @@ d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main
         .attr("stroke", "black")
         .attr("stroke-width", 0.5);
 }).catch(function (error) {
-    console.error("Error loading the GeoJSON file:", error); // Improved error handling
+    console.error("Error loading the GeoJSON file:", error);
 });
