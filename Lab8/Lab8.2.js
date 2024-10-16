@@ -36,7 +36,7 @@ var color = d3.scaleQuantize()
         ]);
 
         // Load GeoJSON data for LGAs
-        d3.json("LGA_VIC.json").then(function(geojson) {
+        d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main/Lab8/LGA_VIC.json").then(function(geojson) {
             // Merge unemployment data with GeoJSON
             unemploymentData.forEach(function(d) {
                 var dataLGA = d.LGA; // Ensure this matches your CSV header
