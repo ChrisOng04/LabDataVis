@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="LAB 8.1" content="D3 Geo Paths and Projections" />
+    <meta name="Coding" content="HTML" />
+    <meta name="Chris Ong" content="Chris Ong" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>LAB 8.1 D3 Geo Paths and Projections</title>
+
+    <style>
+        /* Button Styling */
+        .view-btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .view-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* SVG Map Styling */
+        svg {
+            border: 1px solid #ccc;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="Lab8.1.js" defer></script>
+</head>
+
+<body>
+    <p>
+        <a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a>
+        <a href="/LabDataVis/Lab8/Lab8.1.html" class="view-btn">LAB 8.1</a>
+        <a href="/LabDataVis/Lab8/Lab8.2.html" class="view-btn">LAB 8.2</a>
+    </p>
+
+    <h1>Victoria's Local Government Areas (LGA) Map</h1>
+
+    <div id="map-container"></div>
+
+    <footer style="color: #00ff0d; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
+        COS30045 Data Visualisation<br>Chris Ong
+    </footer>
+</body>
+
+</html>
