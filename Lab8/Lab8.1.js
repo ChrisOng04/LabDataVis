@@ -18,7 +18,7 @@ var svg = d3.select("#map-container")
     .attr("height", height);
 
 // Load the GeoJSON data
-d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main/Lab8/LGA_VIC.json").then(function (geojson) {
+d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main/Lab8/LGA_VIC.json").then(function (geojson) { //update
     console.log("GeoJSON data loaded successfully:", geojson);
     // Bind data and create one path per GeoJSON feature
     svg.selectAll("path")
