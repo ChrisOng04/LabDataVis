@@ -34,7 +34,20 @@
             display: block;
             margin: 20px auto;
         }
+
+        /* Tooltip styling */
+        #tooltip {
+            position: absolute;
+            opacity: 0;
+            background: lightgray;
+            padding: 5px;
+            border-radius: 5px;
+            pointer-events: none;
+            font-size: 12px;
+            color: #333;
+        }
     </style>
+
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="Lab8.2.js" defer></script>
 </head>
@@ -42,13 +55,17 @@
 <body>
     <p>
         <a href="/LabDataVis/Main/Overall.html" class="view-btn">Back</a>
-        <a href="/LabDataVis/Lab8/Lab8.1a.html"class="view-btn">LAB 8.1</a>
+        <a href="/LabDataVis/Lab8/Lab8.1a.html" class="view-btn">LAB 8.1</a>
         <a href="/LabDataVis/Lab8/Lab8.2.html" class="view-btn">LAB 8.2</a>
     </p>
 
     <h1>Victoria's Local Government Areas (LGA) Unemployment Map</h1>
 
+    <!-- Container for the D3 map -->
     <div id="map-container"></div>
+
+    <!-- Tooltip for displaying additional information -->
+    <div id="tooltip"></div>
 
     <footer style="color: #00ff0d; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 0.9em; text-align: center;">
         COS30045 Data Visualisation<br>Chris Ong

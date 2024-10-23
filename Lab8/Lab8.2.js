@@ -64,7 +64,7 @@ function init() {
                    var LGAName = d.properties.LGA_name;
                    var unemployed = d.properties.unemployed || "No data";
                    d3.select("#tooltip") // Assuming you have a tooltip element
-                     .style("left", (event.pageX + 5) + "px")
+                     .style("left", (event.pageX + 10) + "px")
                      .style("top", (event.pageY - 28) + "px")
                      .style("opacity", 1)
                      .html(`<strong>${LGAName}</strong><br>Unemployed: ${unemployed}`);
@@ -84,7 +84,18 @@ function init() {
                    .attr("cy", d => projection([+d.lon, +d.lat])[1]) // Ensure lon/lat are numbers
                    .attr("r", 5)  // Radius of circles
                    .style("fill", "blue")
-                   .style("opacity", 0.75);
+                   .style("opacity", 0.75)
+                   .on("mouseover", function(event, d) {
+                       d3.select("#tooltip")
+                         .style("left", (event.pageX + 10) + "px")
+                         .style("top", (event.pageY - 28) + "px")
+                         .style("opacity", 1)
+                         .html(`<strong>${d.city}</strong><br>Longitude: ${d.lon}<br>Latitude: ${d.lat}`);
+                   })
+                   .on("mouseout", function() {
+                       d3.select("#tooltip")
+                         .style("opacity", 0);
+                   });
             }).catch(function(error) {
                 console.error("Error loading city data: ", error);
             });
