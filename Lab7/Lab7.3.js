@@ -10,7 +10,7 @@ var dataset = [
 // Set up the dimensions of the SVG
 var width = 500;
 var height = 300;
-var margin = { top: 20, right: 20, bottom: 30, left: 40 };
+var margin = { top: 20, right: 100, bottom: 30, left: 40 }; // Increased right margin for legend
 
 // Create the SVG container
 var svg = d3.select("#chart")
@@ -46,7 +46,7 @@ var groups = svg.selectAll("g.series")
     .data(series)
     .enter()
     .append("g")
-    .attr("fill", (d, i) => color(i));
+    .attr("fill", d => color(d.key));
 
 // Draw the rectangles for the stacked bar chart
 groups.selectAll("rect")
@@ -57,3 +57,24 @@ groups.selectAll("rect")
     .attr("y", d => yScale(d[1]))
     .attr("height", d => yScale(d[0]) - yScale(d[1]))
     .attr("width", xScale.bandwidth());
+
+// Add a legend on the right
+var legend = svg.selectAll(".legend")
+    .data(color.domain())
+    .enter()
+    .append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(" + (width + 20) + "," + (i * 20) + ")"; }); // Adjusted positioning for the legend
+
+legend.append("rect")
+    .attr("x", 0)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", color);
+
+legend.append("text")
+    .attr("x", 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "start")
+    .text(d => d);

@@ -37,13 +37,13 @@ function init() {
         d3.json("https://raw.githubusercontent.com/ChrisOng04/LabDataVis/refs/heads/main/Lab8/LGA_VIC.json").then(function(geojson) {
             // Merge unemployment data with GeoJSON
             unemploymentData.forEach(function(d) {
-                var dataLGA = d.LGA; // Ensure this matches your CSV header
+                var dataLGA = d.LGA;
                 var dataValue = d.unemployed;
 
                 // Find the corresponding LGA in GeoJSON
                 geojson.features.forEach(function(feature) {
-                    if (feature.properties.LGA_name === dataLGA) { // Check this property name
-                        feature.properties.unemployed = dataValue; // Assign the value
+                    if (feature.properties.LGA_name === dataLGA) {
+                        feature.properties.unemployed = dataValue;
                     }
                 });
             });
@@ -63,19 +63,21 @@ function init() {
                .on("mouseover", function(event, d) {
                    var LGAName = d.properties.LGA_name;
                    var unemployed = d.properties.unemployed || "No data";
-                   d3.select("#tooltip") // Assuming you have a tooltip element
+                   d3.select("#tooltip")
                      .style("left", (event.pageX + 10) + "px")
                      .style("top", (event.pageY - 28) + "px")
                      .style("opacity", 1)
                      .html(`<strong>${LGAName}</strong><br>Unemployed: ${unemployed}`);
                })
                .on("mouseout", function() {
-                   d3.select("#tooltip")
-                     .style("opacity", 0);
+                   d3.select("#tooltip").style("opacity", 0);
                });
 
             // Load and plot city points (e.g., major cities)
             d3.csv("VIC_city.csv").then(function(cityData) {
+                // Debugging: Log the city data to inspect the structure
+                console.log(cityData);
+
                 svg.selectAll("circle")
                    .data(cityData)
                    .enter()
@@ -86,15 +88,16 @@ function init() {
                    .style("fill", "blue")
                    .style("opacity", 0.75)
                    .on("mouseover", function(event, d) {
+                       console.log(d); // Debugging: Log the city object to see if data is properly loaded
+
                        d3.select("#tooltip")
                          .style("left", (event.pageX + 10) + "px")
                          .style("top", (event.pageY - 28) + "px")
                          .style("opacity", 1)
-                         .html(`<strong>${d.city}</strong><br>Longitude: ${d.lon}<br>Latitude: ${d.lat}`);
+                         .html(`<strong>${d.city || 'Unknown City'}</strong><br>Longitude: ${d.lon || 'N/A'}<br>Latitude: ${d.lat || 'N/A'}`);
                    })
                    .on("mouseout", function() {
-                       d3.select("#tooltip")
-                         .style("opacity", 0);
+                       d3.select("#tooltip").style("opacity", 0);
                    });
             }).catch(function(error) {
                 console.error("Error loading city data: ", error);
