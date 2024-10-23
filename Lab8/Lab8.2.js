@@ -17,10 +17,8 @@ function init() {
     var path = d3.geoPath().projection(projection);
 
     // Define a color scale for unemployment data
-// Define the color scale
-var color = d3.scaleQuantize()
-    .range(["#f1eef6", "#d7b5d8", "#df65b0", "#dd1c77", "#980043"]);
-
+    var color = d3.scaleQuantize()
+                  .range(["#f1eef6", "#d7b5d8", "#df65b0", "#dd1c77", "#980043"]);
 
     // Load unemployment data
     d3.csv("VIC_LGA_unemployment.csv").then(function(unemploymentData) {
@@ -76,15 +74,15 @@ var color = d3.scaleQuantize()
                      .style("opacity", 0);
                });
 
-            // Optional: Load and plot city points (e.g., major cities)
+            // Load and plot city points (e.g., major cities)
             d3.csv("VIC_city.csv").then(function(cityData) {
                 svg.selectAll("circle")
                    .data(cityData)
                    .enter()
                    .append("circle")
-                   .attr("cx", d => projection([+d.lon, +d.lat])[0])
-                   .attr("cy", d => projection([+d.lon, +d.lat])[1])
-                   .attr("r", 5)
+                   .attr("cx", d => projection([+d.lon, +d.lat])[0]) // Ensure lon/lat are numbers
+                   .attr("cy", d => projection([+d.lon, +d.lat])[1]) // Ensure lon/lat are numbers
+                   .attr("r", 5)  // Radius of circles
                    .style("fill", "blue")
                    .style("opacity", 0.75);
             }).catch(function(error) {
